@@ -17,18 +17,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        TextView textView = findViewById(R.id.textViewHelloWord);
         ((MusicApp)getApplication()).serviceManager.bindService(getApplicationContext(), MusicPlayerServiceImp.class.getName())
                 .subscribeWith(new DisposableObserver<Boolean>() {
                     @Override
                     public void onNext(@NonNull Boolean aBoolean) {
-                        textView.setText("binded");
+                        setContentView(R.layout.fragment_main);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        textView.setText(e.getMessage());
+                        e.printStackTrace();
                     }
 
                     @Override

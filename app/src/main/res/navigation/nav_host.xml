@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_host"
+    app:startDestination="@id/main">
+    <fragment
+        android:id="@+id/main"
+        android:name="com.duh.samplemusicplayer.view.fragment.SongListFragment"
+        android:label="main" >
+    </fragment>
+
+
+
+</navigation>
