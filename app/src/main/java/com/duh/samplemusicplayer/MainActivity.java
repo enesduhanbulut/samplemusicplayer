@@ -3,6 +3,14 @@ package com.duh.samplemusicplayer;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.duh.samplemusicplayer.app.MusicApp;
+import com.duh.samplemusicplayer.service.MusicPlayerServiceImp;
+
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -10,5 +18,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TextView textView = findViewById(R.id.textViewHelloWord);
+        ((MusicApp)getApplication()).serviceManager.bindService(getApplicationContext(), MusicPlayerServiceImp.class.getName())
+                .subscribeWith(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(@NonNull Boolean aBoolean) {
+                        textView.setText("binded");
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        textView.setText(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 }
