@@ -33,6 +33,10 @@ public class ServiceManager {
         return serviceBindPublisher;
     }
 
+    public void unbind(Context context) {
+        context.unbindService(musicPlayerConnector);
+    }
+
     public IMusicPlayerServiceAIDL getMusicService() {
         return iRemoteService;
     }

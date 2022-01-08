@@ -1,5 +1,6 @@
 package com.duh.samplemusicplayer.view.adapter;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,13 @@ import com.google.android.material.textview.MaterialTextView;
 import java.io.File;
 
 public class SongRecyclerViewAdapter extends AbstractRecyclerViewAdapter<Song, SongRecyclerViewAdapter.ViewHolder> {
+    private final BitmapSource bitmapSource;
+    private final OnItemClickListener onClickListener;
+
+    public SongRecyclerViewAdapter(BitmapSource bitmapSource, OnItemClickListener onClickListener) {
+        this.bitmapSource = bitmapSource;
+        this.onClickListener = onClickListener;
+    }
 
     @Override
     boolean areItemsSame(Song object, Song object2) {
@@ -23,9 +31,7 @@ public class SongRecyclerViewAdapter extends AbstractRecyclerViewAdapter<Song, S
 
     @Override
     boolean areContentsTheSame(Song object, Song object2) {
-        return (object.getSongTitle() != null && object.getSongTitle().equals(object2.getSongTitle())) &&
-                (object.getSongArtist() != null && object.getSongArtist().equals(object2.getSongArtist())) &&
-                (object.getGenre() != null && object.getGenre().equals(object2.getGenre()));
+        return object.getSongId() == object2.getSongId();
     }
 
     @NonNull
@@ -37,9 +43,15 @@ public class SongRecyclerViewAdapter extends AbstractRecyclerViewAdapter<Song, S
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.songArtist.setText(getItem(position).getSongArtist());
-        holder.songTitle.setText(new File(getItem(position).getPath()).getName());
-        // TODO: 8.01.2022 get album cover set it to imageview
+        holder.bind(getItem(position), bitmapSource, onClickListener);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Song song);
+    }
+
+    public interface BitmapSource {
+        Bitmap getBitmap(String path);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -52,6 +64,13 @@ public class SongRecyclerViewAdapter extends AbstractRecyclerViewAdapter<Song, S
             albumCover = itemView.findViewById(R.id.imageViewAlbumCover);
             songTitle = itemView.findViewById(R.id.textViewSongTitle);
             songArtist = itemView.findViewById(R.id.textViewSongArtist);
+        }
+
+        public void bind(Song song, BitmapSource bitmapSource, OnItemClickListener listener) {
+            songArtist.setText(song.getSongArtist());
+            songTitle.setText(new File(song.getPath()).getName());
+            albumCover.setImageBitmap(bitmapSource.getBitmap(song.getPath()));
+            itemView.setOnClickListener(view -> listener.onItemClick(song));
         }
     }
 }

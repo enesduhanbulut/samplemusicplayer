@@ -60,4 +60,12 @@ public class MainActivity extends AppCompatActivity {
             onRequestPermissionsResult(101, new String[]{""}, new int[]{0});
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((MusicApp) getApplication()).serviceManager.unbind(getApplicationContext());
+    }
+
+
 }

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.duh.samplemusicplayer.R;
@@ -33,8 +34,7 @@ public class SongListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SongListViewModel.Factory factory = new SongListViewModel.Factory(((MusicApp)getActivity().getApplication()).serviceManager.getMusicService());
-        songListViewModel = factory.create(SongListViewModel.class);
-        adapter = new SongRecyclerViewAdapter();
+        songListViewModel = new ViewModelProvider(getActivity(), factory).get(SongListViewModel.class);
     }
 
     @Nullable
@@ -47,6 +47,7 @@ public class SongListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView songsRecyclerView = view.findViewById(R.id.recyclerViewSongs);
+        adapter = new SongRecyclerViewAdapter(songListViewModel::getAlbumCover, song -> Toast.makeText(view.getContext(), song.toString(), Toast.LENGTH_LONG).show());
         songsRecyclerView.setAdapter(adapter);
 
         songListViewModel.getSongObservable()

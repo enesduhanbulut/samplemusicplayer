@@ -1,5 +1,8 @@
 package com.duh.samplemusicplayer.viewmodel;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -25,6 +28,13 @@ public class SongListViewModel extends ViewModel {
 
     public SongListViewModel(IMusicPlayerServiceAIDL serviceAIDL) {
         this.serviceAIDL = serviceAIDL;
+    }
+
+    public Bitmap getAlbumCover(String path) {
+        try (MediaMetadataRetriever mmr = new MediaMetadataRetriever()) {
+            mmr.setDataSource(path);
+            return BitmapFactory.decodeByteArray(mmr.getEmbeddedPicture(), 0, mmr.getEmbeddedPicture().length);
+        }
     }
 
     public Observable<Song> getSongObservable() {
