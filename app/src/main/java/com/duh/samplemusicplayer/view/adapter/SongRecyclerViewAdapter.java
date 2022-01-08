@@ -12,6 +12,8 @@ import com.duh.samplemusicplayer.R;
 import com.duh.samplemusicplayer.model.Song;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.io.File;
+
 public class SongRecyclerViewAdapter extends AbstractRecyclerViewAdapter<Song, SongRecyclerViewAdapter.ViewHolder> {
 
     @Override
@@ -21,33 +23,35 @@ public class SongRecyclerViewAdapter extends AbstractRecyclerViewAdapter<Song, S
 
     @Override
     boolean areContentsTheSame(Song object, Song object2) {
-        return object.getSingerName().equals(object2.getSingerName()) &&
-                object.getSongName().equals(object2.getSongName()) &&
-                object.getAlbumCoverPath().equals(object2.getAlbumCoverPath());
+        return (object.getSongTitle() != null && object.getSongTitle().equals(object2.getSongTitle())) &&
+                (object.getSongArtist() != null && object.getSongArtist().equals(object2.getSongArtist())) &&
+                (object.getGenre() != null && object.getGenre().equals(object2.getGenre()));
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_song, parent, false);
-        return new ViewHolder(view);    }
+        return new ViewHolder(view);
+    }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.singerName.setText(getItem(position).getSingerName());
-        holder.songName.setText(getItem(position).getSongName());
+        holder.songArtist.setText(getItem(position).getSongArtist());
+        holder.songTitle.setText(new File(getItem(position).getPath()).getName());
         // TODO: 8.01.2022 get album cover set it to imageview
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView albumCover;
-        private MaterialTextView songName;
-        private MaterialTextView singerName;
+        private final ImageView albumCover;
+        private final MaterialTextView songTitle;
+        private final MaterialTextView songArtist;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             albumCover = itemView.findViewById(R.id.imageViewAlbumCover);
-            songName = itemView.findViewById(R.id.textViewSongName);
-            singerName = itemView.findViewById(R.id.textViewSingerName);
+            songTitle = itemView.findViewById(R.id.textViewSongTitle);
+            songArtist = itemView.findViewById(R.id.textViewSongArtist);
         }
     }
 }

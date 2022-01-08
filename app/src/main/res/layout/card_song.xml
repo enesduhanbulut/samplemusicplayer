@@ -32,7 +32,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/textViewSongName"
+                    android:id="@+id/textViewSongTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -40,7 +40,7 @@
                     tools:text="Sample song name" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/textViewSingerName"
+                    android:id="@+id/textViewSongArtist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"

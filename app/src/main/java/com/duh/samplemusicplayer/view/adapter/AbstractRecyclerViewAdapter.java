@@ -19,6 +19,12 @@ public abstract class AbstractRecyclerViewAdapter<T, S extends RecyclerView.View
         items.add(item);
     }
 
+    public void addItemWithUpdate(T item) {
+        items.add(item);
+        List<T> tempList = new ArrayList<>(items);
+        updateList(tempList);
+    }
+
     public T getItem(int pos) {
         return items.get(pos);
     }
