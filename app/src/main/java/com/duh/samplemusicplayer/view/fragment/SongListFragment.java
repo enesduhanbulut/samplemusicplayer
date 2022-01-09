@@ -47,13 +47,21 @@ public class SongListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView songsRecyclerView = view.findViewById(R.id.recyclerViewSongs);
-        adapter = new SongRecyclerViewAdapter(songListViewModel::getAlbumCover, song -> Toast.makeText(view.getContext(), song.toString(), Toast.LENGTH_LONG).show());
+        adapter = new SongRecyclerViewAdapter(songListViewModel::getAlbumCover, this::onItemClicked);
         songsRecyclerView.setAdapter(adapter);
 
         songListViewModel.getSongObservable()
                 .subscribeWith(onSongsReceived());
         try {
             songListViewModel.getSongList();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onItemClicked(Song song) {
+        try {
+            songListViewModel.startMusic(song);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

@@ -41,6 +41,47 @@ public class SongListViewModel extends ViewModel {
         return songPublisher;
     }
 
+    public void startMusic(Song song) throws RemoteException {
+        // here is for test
+        if (serviceAIDL.isPlaying()) {
+            serviceAIDL.pauseMusic(new IMusicPlayerListener() {
+                @Override
+                public void onSuccess(Bundle bundle) throws RemoteException {
+
+                }
+
+                @Override
+                public void onError(int errorCode, String errorMessage) throws RemoteException {
+
+                }
+
+                @Override
+                public IBinder asBinder() {
+                    return null;
+                }
+            });
+        } else {
+            Bundle data = new Bundle();
+            data.putParcelable(Constants.SONG, song);
+            serviceAIDL.startMusic(data, new IMusicPlayerListener() {
+                @Override
+                public void onSuccess(Bundle bundle) throws RemoteException {
+
+                }
+
+                @Override
+                public void onError(int errorCode, String errorMessage) throws RemoteException {
+
+                }
+
+                @Override
+                public IBinder asBinder() {
+                    return null;
+                }
+            });
+        }
+    }
+
     public void getSongList() throws RemoteException {
         serviceAIDL.getSongList(new IMusicPlayerListener() {
             @Override

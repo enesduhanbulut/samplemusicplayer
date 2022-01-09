@@ -52,6 +52,7 @@ public class AudioProvider {
                     .createSong();
             songPublisher.onNext(music);
         }
+        songPublisher.onComplete();
     }
 
     public Bitmap getAlbumCover(String path) {
