@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat;
 
 import com.duh.samplemusicplayer.app.MusicApp;
 import com.duh.samplemusicplayer.service.MusicPlayerServiceImp;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.observers.DisposableObserver;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                 } else {
-                    //not granted
+                    // TODO: 14.01.2022 implement here
                 }
                 break;
             default:

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomPlayerButtonStyle">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:layout_width">@dimen/nextPreviousButtonSize</item>
+        <item name="height">@dimen/nextPreviousButtonSize</item>
+    </style>
+</resources>
