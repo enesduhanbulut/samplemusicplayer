@@ -5,7 +5,6 @@ import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,16 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.duh.samplemusicplayer.IMusicPlayerServiceAIDL;
 import com.duh.samplemusicplayer.R;
 import com.duh.samplemusicplayer.app.MusicApp;
 import com.duh.samplemusicplayer.model.Song;
 import com.duh.samplemusicplayer.view.adapter.SongRecyclerViewAdapter;
 import com.duh.samplemusicplayer.viewmodel.SongListViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -33,7 +29,8 @@ public class SongListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SongListViewModel.Factory factory = new SongListViewModel.Factory(((MusicApp)getActivity().getApplication()).serviceManager.getMusicService());
+        IMusicPlayerServiceAIDL serviceAIDL = ((MusicApp) getActivity().getApplication()).serviceManager.getMusicService();
+        SongListViewModel.Factory factory = new SongListViewModel.Factory(serviceAIDL);
         songListViewModel = new ViewModelProvider(getActivity(), factory).get(SongListViewModel.class);
     }
 
@@ -51,6 +48,7 @@ public class SongListFragment extends Fragment {
         songsRecyclerView.setAdapter(adapter);
 
         songListViewModel.getSongObservable()
+                .observeOn(Schedulers.io())
                 .subscribeWith(onSongsReceived());
         try {
             songListViewModel.getSongList();
@@ -67,8 +65,8 @@ public class SongListFragment extends Fragment {
         }
     }
 
-    private DisposableObserver<Song> onSongsReceived(){
-        return new DisposableObserver<Song>(){
+    private DisposableObserver<Song> onSongsReceived() {
+        return new DisposableObserver<Song>() {
 
             @Override
             public void onNext(@io.reactivex.rxjava3.annotations.NonNull Song song) {
