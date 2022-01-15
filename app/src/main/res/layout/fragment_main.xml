@@ -18,7 +18,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,11 +30,11 @@
             android:layout_marginHorizontal="20dp"
             android:src="@drawable/ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/buttonPlayAndStop"
+            app:layout_constraintEnd_toStartOf="@id/buttonPlay"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/buttonPlayAndStop"
+            android:id="@+id/buttonPlay"
             style="@style/BottomPlayerButtonStyle"
             android:layout_width="@dimen/playButtonSize"
             android:layout_height="@dimen/playButtonSize"
@@ -49,7 +49,7 @@
             android:layout_marginHorizontal="20dp"
             android:src="@drawable/ic_next"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/buttonPlayAndStop"
+            app:layout_constraintStart_toEndOf="@id/buttonPlay"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

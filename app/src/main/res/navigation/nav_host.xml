@@ -6,9 +6,7 @@
     <fragment
         android:id="@+id/main"
         android:name="com.duh.samplemusicplayer.view.fragment.SongListFragment"
-        android:label="main" >
-    </fragment>
-
+        android:label="main"></fragment>
 
 
 </navigation>

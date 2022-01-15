@@ -10,8 +10,6 @@ import androidx.core.content.ContextCompat;
 
 import com.duh.samplemusicplayer.app.MusicApp;
 import com.duh.samplemusicplayer.service.MusicPlayerServiceImp;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.observers.DisposableObserver;
@@ -26,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-          switch (requestCode) {
+        switch (requestCode) {
             case 101:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     ((MusicApp) getApplication()).serviceManager.bindService(getApplicationContext(), MusicPlayerServiceImp.class.getName())
