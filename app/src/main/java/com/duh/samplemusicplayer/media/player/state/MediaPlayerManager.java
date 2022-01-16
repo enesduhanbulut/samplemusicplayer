@@ -4,21 +4,44 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
+import com.duh.samplemusicplayer.media.AudioProvider;
+import com.duh.samplemusicplayer.model.Song;
+import com.duh.samplemusicplayer.utils.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.observers.DisposableObserver;
+
 public class MediaPlayerManager {
     private final IStateChanger stateChanger;
-    private final IdleState idleState;
-    private final InitializedState initializedState;
-    private final PreparedState preparedState;
-    private final StartedState startedState;
-    private final PausedState pausedState;
-    private final StoppedState stoppedState;
-    private final CompletedState completedState;
-    private final ErrorState errorState;
+    private final List<Song> songList = new ArrayList<>();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final AudioProvider audioProvider;
+    private Song currentSong;
+    private IdleState idleState = null;
+    private InitializedState initializedState;
+    private PreparedState preparedState;
+    private StartedState startedState;
+    private PausedState pausedState;
+    private StoppedState stoppedState;
+    private CompletedState completedState;
+    private ErrorState errorState;
     private MediaPlayer mediaPlayer;
     private IMediaPlayerState currentState;
 
-    public MediaPlayerManager(Context context) {
+    public MediaPlayerManager(Context context, AudioProvider audioProvider) {
+        this.audioProvider = audioProvider;
         this.stateChanger = this::onStateChange;
+        initStates(context);
+        observeSongList();
+
+        currentState = idleState;
+    }
+
+    private void initStates(Context context) {
         this.idleState = new IdleState(context, initializedMediaPlayer -> {
             this.mediaPlayer = initializedMediaPlayer;
             this.mediaPlayer.setOnErrorListener(this::onError);
@@ -33,11 +56,19 @@ public class MediaPlayerManager {
         this.stoppedState = new StoppedState();
         this.completedState = new CompletedState();
         this.errorState = new ErrorState();
-
-        currentState = idleState;
     }
 
     public void handleEvent(MediaPlayerEvents event, Bundle bundle) {
+        switch (event) {
+            case NEXT:
+                bundle = getNextSongBundle();
+                break;
+            case PREVIOUS:
+                bundle = getPreviousSongBundle();
+                break;
+            default:
+                break;
+        }
         currentState.handle(event, bundle, mediaPlayer, stateChanger);
     }
 
@@ -68,6 +99,62 @@ public class MediaPlayerManager {
                 return;
         }
         handleEvent(event, bundle);
+        currentSong = startedState.getCurrentSong();
+    }
+
+    public List<Song> getSongList() {
+        return this.songList;
+    }
+
+    private Bundle getNextSongBundle() {
+        Bundle bundle = new Bundle();
+        int nextSongIndex = songList.size() - 1;
+        if (currentSong != null) {
+            int currIndex = songList.indexOf(currentSong);
+            if (currIndex + 1 < songList.size()) {
+                nextSongIndex = currIndex + 1;
+            }
+        }
+        bundle.putParcelable(Constants.SONG, songList.get(nextSongIndex));
+        return bundle;
+    }
+
+    private Bundle getPreviousSongBundle() {
+        Bundle bundle = new Bundle();
+        int previousSongIndex = 0;
+        if (currentSong != null) {
+            int currIndex = songList.indexOf(currentSong);
+            if (currIndex - 1 > -1) {
+                previousSongIndex = currIndex - 1;
+            }
+        }
+        bundle.putParcelable(Constants.SONG, songList.get(previousSongIndex));
+        return bundle;
+    }
+
+    public Song getCurrentSong() {
+        return currentSong;
+    }
+
+    private void observeSongList() {
+        compositeDisposable.add(audioProvider.getSongObservable()
+                .subscribeWith(new DisposableObserver<Song>() {
+                    @Override
+                    public void onNext(@NonNull Song song) {
+                        songList.add(song);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
+        audioProvider.getSongs();
     }
 
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
@@ -75,8 +162,15 @@ public class MediaPlayerManager {
     }
 
     public void release() {
-        mediaPlayer.release();
-        mediaPlayer = null;
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        compositeDisposable.clear();
+    }
+
+    public boolean isPlaying() {
+        return mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
     public interface IMediaPlayerListener {

@@ -1,9 +1,12 @@
 package com.duh.samplemusicplayer.media.player.state;
 
 public enum MediaPlayerEvents {
-    START_OR_PAUSE,
+    START,
+    PAUSE,
     NEXT,
     PREVIOUS,
     STOP,
+    GET_SONGS,
+    NONE,
     ;
 }

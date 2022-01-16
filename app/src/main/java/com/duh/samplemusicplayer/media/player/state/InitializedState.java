@@ -16,7 +16,7 @@ public class InitializedState implements IMediaPlayerState {
     @Override
     public void handle(MediaPlayerEvents event, Bundle bundle, MediaPlayer mediaPlayer, IStateChanger stateChanger) {
         switch (event) {
-            case START_OR_PAUSE:
+            case START:
                 Song song = bundle.getParcelable(Constants.SONG);
                 if (song != null) {
                     mediaPlayer.setOnPreparedListener(preparedMediaPlayer -> {
@@ -25,11 +25,13 @@ public class InitializedState implements IMediaPlayerState {
                     });
                     mediaPlayer.prepareAsync();
                 } else {
-                    throw new IllegalStateException("Can not pause on this state");
+                    throw new IllegalStateException(String.format("STATE :%s, EVENT :%s",
+                            this.getClass().getName(), event.name()));
                 }
                 break;
             default:
-                throw new IllegalStateException("Can not pause on this state");
+                throw new IllegalStateException(String.format("STATE :%s, EVENT :%s",
+                            this.getClass().getName(), event.name()));
         }
     }
 }

@@ -25,6 +25,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 public class SongListViewModel extends ViewModel {
     private final IMusicPlayerServiceAIDL serviceAIDL;
     private final PublishSubject<Song> songPublisher = PublishSubject.create();
+    private final PublishSubject<Boolean> songSelectPublisher = PublishSubject.create();
 
     public SongListViewModel(IMusicPlayerServiceAIDL serviceAIDL) {
         this.serviceAIDL = serviceAIDL;
@@ -41,51 +42,66 @@ public class SongListViewModel extends ViewModel {
         return songPublisher;
     }
 
-    public void startMusic(Song song) throws RemoteException {
-        // here is for test
-        if (serviceAIDL.isPlaying()) {
-            serviceAIDL.pauseMusic(new IMusicPlayerListener() {
-                @Override
-                public void onSuccess(Bundle bundle) throws RemoteException {
-
-                }
-
-                @Override
-                public void onError(int errorCode, String errorMessage) throws RemoteException {
-
-                }
-
-                @Override
-                public IBinder asBinder() {
-                    return null;
-                }
-            });
-        } else {
+    public void startMusic(Song song) {
+        try {
             Bundle data = new Bundle();
             data.putParcelable(Constants.SONG, song);
-            serviceAIDL.startMusic(data, new IMusicPlayerListener() {
-                @Override
-                public void onSuccess(Bundle bundle) throws RemoteException {
-
-                }
-
-                @Override
-                public void onError(int errorCode, String errorMessage) throws RemoteException {
-
-                }
-
-                @Override
-                public IBinder asBinder() {
-                    return null;
-                }
-            });
+            serviceAIDL.startMusic(data);
+            songSelectPublisher.onNext(true);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
+    }
+
+    public void startMusic() {
+        try {
+            serviceAIDL.startMusic(new Bundle());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startNextMusic() {
+        try {
+            serviceAIDL.next();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startPreviousMusic() {
+        try {
+            serviceAIDL.previous();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void pauseMusic() {
+        try {
+            serviceAIDL.pauseMusic();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isPlaying() {
+        try {
+            return serviceAIDL.isPlaying();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Observable<Boolean> getSongSelectPublisher() {
+        return songSelectPublisher;
     }
 
     public void getSongList() throws RemoteException {
         serviceAIDL.getSongList(new IMusicPlayerListener() {
             @Override
-            public void onSuccess(Bundle bundle) throws RemoteException {
+            public void onSuccess(Bundle bundle) {
                 ArrayList<Song> songs = bundle.getParcelableArrayList(Constants.SONG_LIST);
                 for (Song song : songs) {
                     songPublisher.onNext(song);

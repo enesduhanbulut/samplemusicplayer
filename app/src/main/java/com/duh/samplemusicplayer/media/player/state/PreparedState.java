@@ -11,17 +11,19 @@ public class PreparedState implements IMediaPlayerState {
     @Override
     public void handle(MediaPlayerEvents event, Bundle bundle, MediaPlayer mediaPlayer, IStateChanger stateChanger) {
         switch (event) {
-            case START_OR_PAUSE:
+            case START:
                 Song song = bundle.getParcelable(Constants.SONG);
                 if (song != null) {
                     mediaPlayer.start();
-                    stateChanger.change(event, bundle, MediaPlayerStates.STARTED);
+                    stateChanger.change(MediaPlayerEvents.NONE, bundle, MediaPlayerStates.STARTED);
                 } else {
-                    throw new IllegalStateException("Can not pause on this state");
+                    throw new IllegalStateException(String.format("STATE :%s, EVENT :%s",
+                            this.getClass().getName(), event.name()));
                 }
                 break;
             default:
-                throw new IllegalStateException("Can not pause on this state");
+                throw new IllegalStateException(String.format("STATE :%s, EVENT :%s",
+                            this.getClass().getName(), event.name()));
         }
     }
 }

@@ -58,11 +58,7 @@ public class SongListFragment extends Fragment {
     }
 
     private void onItemClicked(Song song) {
-        try {
-            songListViewModel.startMusic(song);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        songListViewModel.startMusic(song);
     }
 
     private DisposableObserver<Song> onSongsReceived() {

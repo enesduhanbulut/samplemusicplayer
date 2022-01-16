@@ -24,7 +24,9 @@ public class IdleState implements IMediaPlayerState {
     @Override
     public void handle(MediaPlayerEvents event, Bundle bundle, MediaPlayer mediaPlayer, IStateChanger stateChanger) {
         switch (event) {
-            case START_OR_PAUSE:
+            case START:
+            case PREVIOUS:
+            case NEXT:
                 Song song = bundle.getParcelable(Constants.SONG);
                 if (song != null) {
                     Uri uri = Uri.fromFile(new File(song.getPath()));
@@ -43,11 +45,13 @@ public class IdleState implements IMediaPlayerState {
                     stateChanger.change(event, bundle, MediaPlayerStates.INITIALIZED);
 
                 } else {
-                    throw new IllegalStateException("Can not pause on this state");
+                    throw new IllegalStateException(String.format("STATE :%s, EVENT :%s",
+                            this.getClass().getName(), event.name()));
                 }
                 break;
             default:
-                throw new IllegalStateException("Can not pause on this state");
+                throw new IllegalStateException(String.format("STATE :%s, EVENT :%s",
+                            this.getClass().getName(), event.name()));
         }
     }
 }
