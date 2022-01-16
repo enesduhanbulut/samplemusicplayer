@@ -34,7 +34,11 @@ public class SongListViewModel extends ViewModel {
     public Bitmap getAlbumCover(String path) {
         try (MediaMetadataRetriever mmr = new MediaMetadataRetriever()) {
             mmr.setDataSource(path);
-            return BitmapFactory.decodeByteArray(mmr.getEmbeddedPicture(), 0, mmr.getEmbeddedPicture().length);
+            if (mmr.getEmbeddedPicture() != null) {
+                return BitmapFactory.decodeByteArray(mmr.getEmbeddedPicture(), 0, mmr.getEmbeddedPicture().length);
+            } else {
+                return null;
+            }
         }
     }
 

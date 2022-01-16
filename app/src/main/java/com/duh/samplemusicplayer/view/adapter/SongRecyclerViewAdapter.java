@@ -1,6 +1,7 @@
 package com.duh.samplemusicplayer.view.adapter;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,11 @@ public class SongRecyclerViewAdapter extends AbstractRecyclerViewAdapter<Song, S
         public void bind(Song song, BitmapSource bitmapSource, OnItemClickListener listener) {
             songArtist.setText(song.getSongArtist());
             songTitle.setText(new File(song.getPath()).getName());
-            albumCover.setImageBitmap(bitmapSource.getBitmap(song.getPath()));
+            if (bitmapSource.getBitmap(song.getPath()) != null) {
+                albumCover.setImageBitmap(bitmapSource.getBitmap(song.getPath()));
+            } else {
+                albumCover.setImageBitmap(BitmapFactory.decodeResource(itemView.getResources(), R.drawable.sample_album_cover));
+            }
             itemView.setOnClickListener(view -> listener.onItemClick(song));
         }
     }
