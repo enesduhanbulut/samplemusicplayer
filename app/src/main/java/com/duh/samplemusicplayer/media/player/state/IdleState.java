@@ -1,5 +1,7 @@
 package com.duh.samplemusicplayer.media.player.state;
 
+import static com.duh.samplemusicplayer.media.player.state.MediaPlayerEvents.START;
+
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -42,7 +44,7 @@ public class IdleState implements IMediaPlayerState {
                                     .setUsage(AudioAttributes.USAGE_MEDIA)
                                     .build());
                     initListener.onChanged(mediaPlayer);
-                    stateChanger.change(event, bundle, MediaPlayerStates.INITIALIZED);
+                    stateChanger.change(START, bundle, MediaPlayerStates.INITIALIZED);
 
                 } else {
                     throw new IllegalStateException(String.format("STATE :%s, EVENT :%s",

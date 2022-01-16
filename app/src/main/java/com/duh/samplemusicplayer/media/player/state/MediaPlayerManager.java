@@ -60,6 +60,11 @@ public class MediaPlayerManager {
 
     public void handleEvent(MediaPlayerEvents event, Bundle bundle) {
         switch (event) {
+            case START:
+                if (currentSong == null) {
+                    bundle = getNextSongBundle();
+                }
+                break;
             case NEXT:
                 bundle = getNextSongBundle();
                 break;
