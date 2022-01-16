@@ -56,6 +56,7 @@ public class SongListViewModel extends ViewModel {
     public void startMusic() {
         try {
             serviceAIDL.startMusic(new Bundle());
+            songSelectPublisher.onNext(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -64,6 +65,7 @@ public class SongListViewModel extends ViewModel {
     public void startNextMusic() {
         try {
             serviceAIDL.next();
+            songSelectPublisher.onNext(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -72,6 +74,7 @@ public class SongListViewModel extends ViewModel {
     public void startPreviousMusic() {
         try {
             serviceAIDL.previous();
+            songSelectPublisher.onNext(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -80,6 +83,7 @@ public class SongListViewModel extends ViewModel {
     public void pauseMusic() {
         try {
             serviceAIDL.pauseMusic();
+            songSelectPublisher.onNext(true);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
