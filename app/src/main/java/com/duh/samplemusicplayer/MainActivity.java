@@ -136,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         ((MusicApp) getApplication()).serviceManager.unbind(getApplicationContext());
