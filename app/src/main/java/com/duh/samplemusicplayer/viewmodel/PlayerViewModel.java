@@ -17,17 +17,19 @@ import com.duh.samplemusicplayer.model.Song;
 import com.duh.samplemusicplayer.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
-public class SongListViewModel extends ViewModel {
+public class PlayerViewModel extends ViewModel {
     private final IMusicPlayerServiceAIDL serviceAIDL;
     private final PublishSubject<Song> songPublisher = PublishSubject.create();
-    private final PublishSubject<Boolean> songSelectPublisher = PublishSubject.create();
+    private final PublishSubject<Song> currentSongObservable = PublishSubject.create();
+    private final PublishSubject<Long> currentDurationObservable = PublishSubject.create();
 
-    public SongListViewModel(IMusicPlayerServiceAIDL serviceAIDL) {
+    public PlayerViewModel(IMusicPlayerServiceAIDL serviceAIDL) {
         this.serviceAIDL = serviceAIDL;
     }
 
@@ -42,16 +44,12 @@ public class SongListViewModel extends ViewModel {
         }
     }
 
-    public Observable<Song> getSongObservable() {
-        return songPublisher;
-    }
-
     public void startMusic(Song song) {
         try {
             Bundle data = new Bundle();
             data.putParcelable(Constants.SONG, song);
             serviceAIDL.startMusic(data);
-            songSelectPublisher.onNext(true);
+            currentSongObservable.onNext(song);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -60,7 +58,7 @@ public class SongListViewModel extends ViewModel {
     public void startMusic() {
         try {
             serviceAIDL.startMusic(new Bundle());
-            songSelectPublisher.onNext(true);
+            currentSongObservable.onNext(getCurrentSong());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -69,7 +67,7 @@ public class SongListViewModel extends ViewModel {
     public void startNextMusic() {
         try {
             serviceAIDL.next();
-            songSelectPublisher.onNext(true);
+            currentSongObservable.onNext(getCurrentSong());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -78,7 +76,7 @@ public class SongListViewModel extends ViewModel {
     public void startPreviousMusic() {
         try {
             serviceAIDL.previous();
-            songSelectPublisher.onNext(true);
+            currentSongObservable.onNext(getCurrentSong());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -87,7 +85,7 @@ public class SongListViewModel extends ViewModel {
     public void pauseMusic() {
         try {
             serviceAIDL.pauseMusic();
-            songSelectPublisher.onNext(true);
+            currentSongObservable.onNext(getCurrentSong());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -102,8 +100,28 @@ public class SongListViewModel extends ViewModel {
         }
     }
 
-    public Observable<Boolean> getSongSelectPublisher() {
-        return songSelectPublisher;
+    public Song getCurrentSong() {
+        try {
+            return serviceAIDL.getCurrentSong().getParcelable(Constants.SONG);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public Observable<Song> getSongListObservable() {
+        return songPublisher;
+    }
+
+    public Observable<Song> getCurrentSongObservable() {
+        return currentSongObservable
+                .delay(100, TimeUnit.MILLISECONDS);
+    }
+
+    public Observable<Long> getCurrentDurationObservable() {
+        return Observable.interval(1, TimeUnit.SECONDS)
+                .flatMap(aLong -> Observable.just(serviceAIDL.getCurrentDuration()));
     }
 
     public void getSongList() throws RemoteException {
@@ -145,7 +163,7 @@ public class SongListViewModel extends ViewModel {
         @Override
         @NonNull
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return (T) new SongListViewModel(serviceAIDL);
+            return (T) new PlayerViewModel(serviceAIDL);
         }
     }
 }

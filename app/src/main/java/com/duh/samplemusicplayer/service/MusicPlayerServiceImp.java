@@ -58,6 +58,18 @@ public class MusicPlayerServiceImp extends Service implements IMusicPlayerServic
         public boolean isPlaying() {
             return mediaPlayerManager.isPlaying();
         }
+
+        @Override
+        public Bundle getCurrentSong() {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(Constants.SONG, mediaPlayerManager.getCurrentSong());
+            return bundle;
+        }
+
+        @Override
+        public long getCurrentDuration() {
+            return mediaPlayerManager.getCurrentDuration();
+        }
     };
 
     @Override

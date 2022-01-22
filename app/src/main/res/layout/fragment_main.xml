@@ -1,56 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.fragment.app.FragmentContainerView
+    <fragment
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintBottom_toTopOf="@id/bottom_player"
         app:layout_constraintStart_toStartOf="parent"
-
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_host" />
+        app:navGraph="@navigation/nav_host"
+        tools:layout="@layout/fragment_songlist" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_navigation"
+    <fragment
+        android:id="@+id/bottom_player"
+        android:name="com.duh.samplemusicplayer.view.fragment.BottomPlayerFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/fragment_bottom_player" />
 
-        <ImageButton
-            android:id="@+id/buttonPrevious"
-            style="@style/BottomPlayerButtonStyle"
-            android:layout_marginHorizontal="20dp"
-            android:src="@drawable/ic_previous"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/buttonPlay"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/buttonPlay"
-            style="@style/BottomPlayerButtonStyle"
-            android:layout_width="@dimen/playButtonSize"
-            android:layout_height="@dimen/playButtonSize"
-            android:src="@drawable/ic_play"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageButton
-            android:id="@+id/buttonNext"
-            style="@style/BottomPlayerButtonStyle"
-            android:layout_marginHorizontal="20dp"
-            android:src="@drawable/ic_next"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/buttonPlay"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

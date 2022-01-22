@@ -7,4 +7,6 @@ interface IMusicPlayerServiceAIDL {
     void previous();
     void getSongList(com.duh.samplemusicplayer.IMusicPlayerListener playerListener);
     boolean isPlaying();
+    Bundle getCurrentSong();
+    long getCurrentDuration();
 }

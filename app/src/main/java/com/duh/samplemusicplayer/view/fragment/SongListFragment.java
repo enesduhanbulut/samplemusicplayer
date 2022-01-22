@@ -17,48 +17,49 @@ import com.duh.samplemusicplayer.R;
 import com.duh.samplemusicplayer.app.MusicApp;
 import com.duh.samplemusicplayer.model.Song;
 import com.duh.samplemusicplayer.view.adapter.SongRecyclerViewAdapter;
-import com.duh.samplemusicplayer.viewmodel.SongListViewModel;
+import com.duh.samplemusicplayer.viewmodel.PlayerViewModel;
 
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SongListFragment extends Fragment {
-    private SongListViewModel songListViewModel;
+    private PlayerViewModel playerViewModel;
     private SongRecyclerViewAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IMusicPlayerServiceAIDL serviceAIDL = ((MusicApp) getActivity().getApplication()).serviceManager.getMusicService();
-        SongListViewModel.Factory factory = new SongListViewModel.Factory(serviceAIDL);
-        songListViewModel = new ViewModelProvider(getActivity(), factory).get(SongListViewModel.class);
+        PlayerViewModel.Factory factory = new PlayerViewModel.Factory(serviceAIDL);
+        playerViewModel = new ViewModelProvider(requireActivity(), factory).get(PlayerViewModel.class);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_songlist, container, false);
+        View view = inflater.inflate(R.layout.fragment_songlist, container, false);
+        RecyclerView songsRecyclerView = view.findViewById(R.id.recyclerViewSongs);
+        adapter = new SongRecyclerViewAdapter(playerViewModel::getAlbumCover, this::onItemClicked);
+        songsRecyclerView.setAdapter(adapter);
+
+        playerViewModel.getSongListObservable()
+                .observeOn(Schedulers.io())
+                .subscribeWith(onSongsReceived());
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView songsRecyclerView = view.findViewById(R.id.recyclerViewSongs);
-        adapter = new SongRecyclerViewAdapter(songListViewModel::getAlbumCover, this::onItemClicked);
-        songsRecyclerView.setAdapter(adapter);
-
-        songListViewModel.getSongObservable()
-                .observeOn(Schedulers.io())
-                .subscribeWith(onSongsReceived());
         try {
-            songListViewModel.getSongList();
+            playerViewModel.getSongList();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
     private void onItemClicked(Song song) {
-        songListViewModel.startMusic(song);
+        playerViewModel.startMusic(song);
     }
 
     private DisposableObserver<Song> onSongsReceived() {
