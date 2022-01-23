@@ -105,7 +105,7 @@ public class BottomPlayerFragment extends Fragment {
 
         } else {
             progressBarDuration.setProgress(0);
-            currentDurationTextView.setText("0");
+            currentDurationTextView.setText("00:00");
         }
     }
 
