@@ -107,8 +107,8 @@ public class MediaPlayerManager {
         currentSong = startedState.getCurrentSong();
     }
 
-    public long getCurrentDuration(){
-        if (mediaPlayer != null){
+    public long getCurrentDuration() {
+        if (currentState instanceof StartedState) {
             return mediaPlayer.getCurrentPosition();
         } else {
             return -1;
