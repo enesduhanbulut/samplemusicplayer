@@ -9,7 +9,6 @@
         android:id="@+id/recyclerViewSongs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         tools:itemCount="20"
         tools:listitem="@layout/card_song" />
 

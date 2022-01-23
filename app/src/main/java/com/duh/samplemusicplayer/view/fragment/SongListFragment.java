@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.duh.samplemusicplayer.IMusicPlayerServiceAIDL;
@@ -39,7 +41,12 @@ public class SongListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_songlist, container, false);
         RecyclerView songsRecyclerView = view.findViewById(R.id.recyclerViewSongs);
-        adapter = new SongRecyclerViewAdapter(playerViewModel::getAlbumCover, this::onItemClicked);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(songsRecyclerView.getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        songsRecyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(songsRecyclerView.getContext(), layoutManager.getOrientation());
+        songsRecyclerView.addItemDecoration(dividerItemDecoration);
+        adapter = new SongRecyclerViewAdapter(this::onItemClicked);
         songsRecyclerView.setAdapter(adapter);
 
         playerViewModel.getSongListObservable()
