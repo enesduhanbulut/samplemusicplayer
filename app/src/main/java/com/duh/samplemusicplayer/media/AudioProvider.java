@@ -10,6 +10,8 @@ import android.provider.MediaStore;
 
 import com.duh.samplemusicplayer.model.Song;
 
+import java.io.File;
+
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
@@ -50,7 +52,9 @@ public class AudioProvider {
                     .setSongArtist(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)))
                     .setDuration(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)))
                     .createSong();
-            songPublisher.onNext(music);
+            if(new File(music.getPath()).exists()){
+                songPublisher.onNext(music);
+            }
         }
         songPublisher.onComplete();
     }
