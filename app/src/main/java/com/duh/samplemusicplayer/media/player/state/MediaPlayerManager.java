@@ -3,7 +3,9 @@ package com.duh.samplemusicplayer.media.player.state;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.RemoteException;
 
+import com.duh.samplemusicplayer.IMusicPlayerListener;
 import com.duh.samplemusicplayer.media.AudioProvider;
 import com.duh.samplemusicplayer.model.Song;
 import com.duh.samplemusicplayer.utils.Constants;
@@ -58,11 +60,11 @@ public class MediaPlayerManager {
         this.errorState = new ErrorState();
     }
 
-    public void handleEvent(MediaPlayerEvents event, Bundle bundle) {
+    public void handleEvent(MediaPlayerEvents event, Bundle bundle, IMusicPlayerListener playerListener) throws RemoteException {
         switch (event) {
             case START:
                 if (currentSong == null) {
-                    bundle = getNextSongBundle();
+                    bundle = getPreviousSongBundle();
                 }
                 break;
             case NEXT:
@@ -74,10 +76,10 @@ public class MediaPlayerManager {
             default:
                 break;
         }
-        currentState.handle(event, bundle, mediaPlayer, stateChanger);
+        currentState.handle(event, bundle, mediaPlayer, stateChanger, playerListener);
     }
 
-    private void onStateChange(MediaPlayerEvents event, Bundle bundle, MediaPlayerStates mediaPlayerState) {
+    private void onStateChange(MediaPlayerEvents event, Bundle bundle, MediaPlayerStates mediaPlayerState, IMusicPlayerListener playerListener) throws RemoteException {
         switch (mediaPlayerState) {
             case IDLE:
                 this.currentState = idleState;
@@ -103,12 +105,12 @@ public class MediaPlayerManager {
             default:
                 return;
         }
-        handleEvent(event, bundle);
+        handleEvent(event, bundle, playerListener);
         currentSong = startedState.getCurrentSong();
     }
 
     public long getCurrentDuration() {
-        if (currentState instanceof StartedState) {
+        if (currentState instanceof StartedState || currentState instanceof PausedState) {
             return mediaPlayer.getCurrentPosition();
         } else {
             return -1;

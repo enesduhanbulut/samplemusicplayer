@@ -7,7 +7,9 @@ import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 
+import com.duh.samplemusicplayer.IMusicPlayerListener;
 import com.duh.samplemusicplayer.model.Song;
 import com.duh.samplemusicplayer.utils.Constants;
 
@@ -24,7 +26,7 @@ public class IdleState implements IMediaPlayerState {
     }
 
     @Override
-    public void handle(MediaPlayerEvents event, Bundle bundle, MediaPlayer mediaPlayer, IStateChanger stateChanger) {
+    public void handle(MediaPlayerEvents event, Bundle bundle, MediaPlayer mediaPlayer, IStateChanger stateChanger, IMusicPlayerListener playerListener) throws RemoteException {
         switch (event) {
             case START:
             case PREVIOUS:
@@ -44,7 +46,7 @@ public class IdleState implements IMediaPlayerState {
                                     .setUsage(AudioAttributes.USAGE_MEDIA)
                                     .build());
                     initListener.onChanged(mediaPlayer);
-                    stateChanger.change(START, bundle, MediaPlayerStates.INITIALIZED);
+                    stateChanger.change(START, bundle, MediaPlayerStates.INITIALIZED, playerListener);
 
                 } else {
                     throw new IllegalStateException(String.format("STATE :%s, EVENT :%s",

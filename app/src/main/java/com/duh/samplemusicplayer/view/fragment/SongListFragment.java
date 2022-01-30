@@ -21,6 +21,8 @@ import com.duh.samplemusicplayer.model.Song;
 import com.duh.samplemusicplayer.view.adapter.SongRecyclerViewAdapter;
 import com.duh.samplemusicplayer.viewmodel.PlayerViewModel;
 
+import java.util.List;
+
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -49,9 +51,7 @@ public class SongListFragment extends Fragment {
         adapter = new SongRecyclerViewAdapter(this::onItemClicked);
         songsRecyclerView.setAdapter(adapter);
 
-        playerViewModel.getSongListObservable()
-                .observeOn(Schedulers.io())
-                .subscribeWith(onSongsReceived());
+        playerViewModel.getSongListLiveData().observe(getViewLifecycleOwner(), this::onSongsReceived);
         return view;
     }
 
@@ -69,23 +69,7 @@ public class SongListFragment extends Fragment {
         playerViewModel.startMusic(song);
     }
 
-    private DisposableObserver<Song> onSongsReceived() {
-        return new DisposableObserver<Song>() {
-
-            @Override
-            public void onNext(@io.reactivex.rxjava3.annotations.NonNull Song song) {
-                adapter.addItemWithUpdate(song);
-            }
-
-            @Override
-            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
+    private void onSongsReceived(List<Song> songList) {
+        adapter.updateList(songList);
     }
 }

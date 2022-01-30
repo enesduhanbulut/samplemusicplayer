@@ -23,35 +23,35 @@ public class MusicPlayerServiceImp extends Service implements IMusicPlayerServic
     private MediaPlayerManager mediaPlayerManager;
     private final IMusicPlayerServiceAIDL.Stub binder = new IMusicPlayerServiceAIDL.Stub() {
         @Override
-        public void startMusic(Bundle bundle) {
-            mediaPlayerManager.handleEvent(MediaPlayerEvents.START, bundle);
+        public void startMusic(Bundle bundle, IMusicPlayerListener playerListener) throws RemoteException {
+            mediaPlayerManager.handleEvent(MediaPlayerEvents.START, bundle, playerListener);
         }
 
         @Override
-        public void pauseMusic() {
-            mediaPlayerManager.handleEvent(MediaPlayerEvents.PAUSE, new Bundle());
+        public void pauseMusic(IMusicPlayerListener playerListener) throws RemoteException {
+            mediaPlayerManager.handleEvent(MediaPlayerEvents.PAUSE, new Bundle(), playerListener);
         }
 
         @Override
-        public void stopMusic() {
-            mediaPlayerManager.handleEvent(MediaPlayerEvents.STOP, new Bundle());
+        public void stopMusic(IMusicPlayerListener playerListener) throws RemoteException {
+            mediaPlayerManager.handleEvent(MediaPlayerEvents.STOP, new Bundle(), playerListener);
         }
 
         @Override
-        public void next() {
-            mediaPlayerManager.handleEvent(MediaPlayerEvents.NEXT, new Bundle());
+        public void next(IMusicPlayerListener playerListener) throws RemoteException {
+            mediaPlayerManager.handleEvent(MediaPlayerEvents.NEXT, new Bundle(), playerListener);
         }
 
         @Override
-        public void previous() {
-            mediaPlayerManager.handleEvent(MediaPlayerEvents.PREVIOUS, new Bundle());
+        public void previous(IMusicPlayerListener playerListener) throws RemoteException {
+            mediaPlayerManager.handleEvent(MediaPlayerEvents.PREVIOUS, new Bundle(), playerListener);
         }
 
         @Override
         public void getSongList(IMusicPlayerListener playerListener) throws RemoteException {
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList(Constants.SONG_LIST, (ArrayList<? extends Parcelable>) mediaPlayerManager.getSongList());
-            playerListener.onSuccess(bundle);
+            playerListener.onListChanged(bundle);
         }
 
         @Override

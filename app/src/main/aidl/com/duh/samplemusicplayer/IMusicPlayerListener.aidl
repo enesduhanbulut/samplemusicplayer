@@ -1,6 +1,9 @@
 package com.duh.samplemusicplayer;
 
 interface IMusicPlayerListener {
-    void onSuccess(in Bundle bundle);
+    void onStarted(in Bundle songBundle);
+    void onPaused();
+    void onStopped();
+    void onListChanged(in Bundle listBundle);
     void onError(int errorCode, String errorMessage);
 }
