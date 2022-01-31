@@ -7,6 +7,7 @@ import android.os.RemoteException;
 
 import com.duh.samplemusicplayer.IMusicPlayerListener;
 import com.duh.samplemusicplayer.media.AudioProvider;
+import com.duh.samplemusicplayer.media.player.PlayerUtils;
 import com.duh.samplemusicplayer.model.Song;
 import com.duh.samplemusicplayer.utils.Constants;
 
@@ -63,7 +64,7 @@ public class MediaPlayerManager {
     public void handleEvent(MediaPlayerEvents event, Bundle bundle, IMusicPlayerListener playerListener) throws RemoteException {
         switch (event) {
             case START:
-                if (currentSong == null) {
+                if (currentSong == null && PlayerUtils.getSongFromBundle(bundle) == null) {
                     bundle = getPreviousSongBundle();
                 }
                 break;
