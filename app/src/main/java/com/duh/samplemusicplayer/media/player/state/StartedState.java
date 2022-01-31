@@ -16,11 +16,14 @@ public class StartedState implements IMediaPlayerState {
     public void handle(MediaPlayerEvents event, Bundle bundle, MediaPlayer mediaPlayer, IStateChanger stateChanger, IMusicPlayerListener playerListener) throws RemoteException {
         switch (event) {
             case START:
-                Song song = bundle.getParcelable(Constants.SONG);
+                Song song = PlayerUtils.getSongFromBundle(bundle);
+                int seekTo = PlayerUtils.getSeekFromBundle(bundle);
                 if (song != null) {
                     mediaPlayer.stop();
                     stateChanger.change(event, bundle, MediaPlayerStates.STOPPED, playerListener);
-                } else {
+                } else if (seekTo != -1){
+                    mediaPlayer.seekTo(seekTo * 1000);
+                } else{
                     mediaPlayer.start();
                     playerListener.onStarted(PlayerUtils.createSongBundle(currentSong));
                 }

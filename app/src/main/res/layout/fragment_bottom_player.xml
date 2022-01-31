@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ProgressBar
-        android:id="@+id/progressBarSong"
+    <SeekBar
+        android:id="@+id/seekBarSong"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         tools:text="00:50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressBarSong" />
+        app:layout_constraintTop_toBottomOf="@id/seekBarSong" />
 
     <TextView
         android:id="@+id/endDurationTextView"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         tools:text="03:30"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressBarSong" />
+        app:layout_constraintTop_toBottomOf="@id/seekBarSong" />
 
     <ImageButton
         android:id="@+id/buttonPrevious"
@@ -39,7 +39,7 @@
         android:src="@drawable/ic_previous"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/buttonPlay"
-        app:layout_constraintTop_toBottomOf="@id/progressBarSong" />
+        app:layout_constraintTop_toBottomOf="@id/seekBarSong" />
 
     <ImageButton
         android:id="@+id/buttonPlay"
@@ -50,7 +50,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progressBarSong" />
+        app:layout_constraintTop_toBottomOf="@id/seekBarSong" />
 
     <ImageButton
         android:id="@+id/buttonNext"
@@ -59,7 +59,7 @@
         android:src="@drawable/ic_next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/buttonPlay"
-        app:layout_constraintTop_toBottomOf="@id/progressBarSong" />
+        app:layout_constraintTop_toBottomOf="@id/seekBarSong" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

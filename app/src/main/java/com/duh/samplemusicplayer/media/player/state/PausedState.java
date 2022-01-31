@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 
 import com.duh.samplemusicplayer.IMusicPlayerListener;
+import com.duh.samplemusicplayer.media.player.PlayerUtils;
 import com.duh.samplemusicplayer.model.Song;
 import com.duh.samplemusicplayer.utils.Constants;
 
@@ -17,9 +18,12 @@ public class PausedState implements IMediaPlayerState {
             case NEXT:
             case PREVIOUS:
                 Song song = bundle.getParcelable(Constants.SONG);
+                int seekTo = PlayerUtils.getSeekFromBundle(bundle);
                 if (song != null) {
                     mediaPlayer.stop();
                     stateChanger.change(MediaPlayerEvents.START, bundle, MediaPlayerStates.STOPPED, playerListener);
+                } else if (seekTo != -1) {
+                    mediaPlayer.seekTo(seekTo * 1000);
                 } else {
                     mediaPlayer.start();
                     stateChanger.change(MediaPlayerEvents.NONE, bundle, MediaPlayerStates.STARTED, playerListener);
@@ -34,7 +38,7 @@ public class PausedState implements IMediaPlayerState {
                 break;
             default:
                 throw new IllegalStateException(String.format("STATE :%s, EVENT :%s",
-                            this.getClass().getName(), event.name()));
+                        this.getClass().getName(), event.name()));
         }
     }
 }

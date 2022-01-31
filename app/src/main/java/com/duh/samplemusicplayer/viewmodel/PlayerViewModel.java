@@ -139,6 +139,14 @@ public class PlayerViewModel extends ViewModel {
         }
     }
 
+    public void startMusic(int seekTo) {
+        try {
+            serviceAIDL.startMusic(PlayerUtils.createSeekBundle(seekTo), playerListener);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void startMusic() {
         try {
             serviceAIDL.startMusic(new Bundle(), playerListener);

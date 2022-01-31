@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,15 +21,16 @@ import com.duh.samplemusicplayer.media.player.PlayerModel;
 import com.duh.samplemusicplayer.media.player.state.MediaPlayerStates;
 import com.duh.samplemusicplayer.viewmodel.PlayerViewModel;
 
-public class BottomPlayerFragment extends Fragment {
+public class BottomPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     private PlayerViewModel playerViewModel;
     private ImageButton buttonPlay;
     private ImageButton buttonNext;
     private ImageButton buttonPrevious;
     private TextView endDurationTextView;
     private TextView currentDurationTextView;
-    private ProgressBar progressBarDuration;
+    private SeekBar seekBarDuration;
     private PlayerModel currentPlayerModel = new PlayerModel();
+    private boolean isSeeking;
 
     @Nullable
     @Override
@@ -43,11 +44,11 @@ public class BottomPlayerFragment extends Fragment {
         buttonPrevious = view.findViewById(R.id.buttonPrevious);
         currentDurationTextView = view.findViewById(R.id.currentDurationTextView);
         endDurationTextView = view.findViewById(R.id.endDurationTextView);
-        progressBarDuration = view.findViewById(R.id.progressBarSong);
+        seekBarDuration = view.findViewById(R.id.seekBarSong);
         buttonPlay.setOnClickListener(this::onPlayClicked);
         buttonNext.setOnClickListener(this::onNextClicked);
         buttonPrevious.setOnClickListener(this::onPreviousClicked);
-
+        seekBarDuration.setOnSeekBarChangeListener(this);
         return view;
     }
 
@@ -59,13 +60,15 @@ public class BottomPlayerFragment extends Fragment {
     }
 
     private void onDurationChanged(long value) {
-        if (value != -1) {
-            currentDurationTextView.setText(DateUtils.formatElapsedTime(value / 1000));
-            progressBarDuration.setProgress((int) value / 1000);
+        if (!isSeeking) {
+            if (value != -1) {
+                currentDurationTextView.setText(DateUtils.formatElapsedTime(value / 1000));
+                seekBarDuration.setProgress((int) value / 1000);
 
-        } else {
-            progressBarDuration.setProgress(0);
-            currentDurationTextView.setText("00:00");
+            } else {
+                seekBarDuration.setProgress(0);
+                currentDurationTextView.setText("00:00");
+            }
         }
     }
 
@@ -102,8 +105,30 @@ public class BottomPlayerFragment extends Fragment {
                 break;
         }
         endDurationTextView.setText(DateUtils.formatElapsedTime(playerModel.getCurrentSong().getDuration() / 1000));
-        progressBarDuration.setMax((int) playerModel.getCurrentSong().getDuration() / 1000);
+        seekBarDuration.setMax((int) playerModel.getCurrentSong().getDuration() / 1000);
         currentPlayerModel = playerModel;
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int value, boolean fromUser) {
+        if (fromUser) {
+            isSeeking = true;
+            currentDurationTextView.setText(DateUtils.formatElapsedTime(value));
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        if (isSeeking) {
+            playerViewModel.startMusic(seekBar.getProgress());
+
+            isSeeking = false;
+        }
     }
 
     @Override
