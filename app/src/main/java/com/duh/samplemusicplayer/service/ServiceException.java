@@ -1,4 +1,4 @@
-package com.duh.samplemusicplayer;
+package com.duh.samplemusicplayer.service;
 
 import android.os.RemoteException;
 

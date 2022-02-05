@@ -1,7 +1,10 @@
 package com.duh.samplemusicplayer.view.fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,17 +23,22 @@ import com.duh.samplemusicplayer.app.MusicApp;
 import com.duh.samplemusicplayer.media.player.PlayerModel;
 import com.duh.samplemusicplayer.media.player.state.MediaPlayerStates;
 import com.duh.samplemusicplayer.viewmodel.PlayerViewModel;
+import com.google.android.material.imageview.ShapeableImageView;
 
 public class BottomPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     private PlayerViewModel playerViewModel;
-    private ImageButton buttonPlay;
-    private ImageButton buttonNext;
+    private ImageButton playButton;
+    private ImageButton nextButton;
     private ImageButton buttonPrevious;
     private TextView endDurationTextView;
     private TextView currentDurationTextView;
     private SeekBar seekBarDuration;
+    private ShapeableImageView imageViewAlbumCover;
     private PlayerModel currentPlayerModel = new PlayerModel();
     private boolean isSeeking;
+    private TextView songTextView;
+    private TextView artistTextView;
+    private TextView albumTextView;
 
     @Nullable
     @Override
@@ -39,16 +47,24 @@ public class BottomPlayerFragment extends Fragment implements SeekBar.OnSeekBarC
         PlayerViewModel.Factory factory = new PlayerViewModel.Factory
                 (((MusicApp) getActivity().getApplication()).serviceManager.getMusicService());
         playerViewModel = new ViewModelProvider(requireActivity(), factory).get(PlayerViewModel.class);
-        buttonPlay = view.findViewById(R.id.buttonPlay);
-        buttonNext = view.findViewById(R.id.buttonNext);
-        buttonPrevious = view.findViewById(R.id.buttonPrevious);
-        currentDurationTextView = view.findViewById(R.id.currentDurationTextView);
-        endDurationTextView = view.findViewById(R.id.endDurationTextView);
-        seekBarDuration = view.findViewById(R.id.seekBarSong);
-        buttonPlay.setOnClickListener(this::onPlayClicked);
-        buttonNext.setOnClickListener(this::onNextClicked);
+        playButton = view.findViewById(R.id.bottomFragmentPlayButton);
+        nextButton = view.findViewById(R.id.bottomFragmentNextButton);
+        buttonPrevious = view.findViewById(R.id.buttomFragmentPreviousButton);
+        currentDurationTextView = view.findViewById(R.id.buttonFragmentCurrDurationTextView);
+        endDurationTextView = view.findViewById(R.id.buttomFragmentEndDurationTextView);
+        seekBarDuration = view.findViewById(R.id.buttomFragmentSeekBar);
+        imageViewAlbumCover = view.findViewById(R.id.bottomPlayerAlbumCoverImageView);
+        songTextView = view.findViewById(R.id.bottomPlayerSongTextView);
+        artistTextView = view.findViewById(R.id.bottomPlayerArtistTextView);
+        albumTextView = view.findViewById(R.id.bottomPlayerAlbumTextView);
+
+        playButton.setOnClickListener(this::onPlayClicked);
+        nextButton.setOnClickListener(this::onNextClicked);
         buttonPrevious.setOnClickListener(this::onPreviousClicked);
         seekBarDuration.setOnSeekBarChangeListener(this);
+        makeTextViewMarquee(songTextView);
+        makeTextViewMarquee(artistTextView);
+        makeTextViewMarquee(albumTextView);
         return view;
     }
 
@@ -94,19 +110,33 @@ public class BottomPlayerFragment extends Fragment implements SeekBar.OnSeekBarC
         switch (playerModel.getCurrentState()) {
             case STARTED:
             case IDLE:
-                buttonPlay.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pause));
+                playButton.setImageDrawable(getActivity().getDrawable(R.drawable.ic_pause));
                 break;
             case STOPPED:
                 endDurationTextView.setText("");
-                buttonPlay.setImageDrawable(getActivity().getDrawable(R.drawable.ic_play));
+                playButton.setImageDrawable(getActivity().getDrawable(R.drawable.ic_play));
                 break;
             case PAUSED:
-                buttonPlay.setImageDrawable(getActivity().getDrawable(R.drawable.ic_play));
+                playButton.setImageDrawable(getActivity().getDrawable(R.drawable.ic_play));
                 break;
         }
         endDurationTextView.setText(DateUtils.formatElapsedTime(playerModel.getCurrentSong().getDuration() / 1000));
         seekBarDuration.setMax((int) playerModel.getCurrentSong().getDuration() / 1000);
+        Bitmap albumCover = playerViewModel.getAlbumCover(playerModel.getCurrentSong().getPath());
+        if (albumCover == null) {
+            albumCover = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.sample_album_cover);
+        }
+        imageViewAlbumCover.setImageBitmap(albumCover);
+        songTextView.setText(playerModel.getCurrentSong().getSongTitle());
+        artistTextView.setText(playerModel.getCurrentSong().getSongArtist());
+        albumTextView.setText(playerModel.getCurrentSong().getSongArtist());
         currentPlayerModel = playerModel;
+    }
+
+    private void makeTextViewMarquee(TextView textView) {
+        textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        textView.setSelected(true);
+        textView.setSingleLine(true);
     }
 
     @Override

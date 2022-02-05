@@ -7,4 +7,7 @@
         <item name="android:layout_width">@dimen/nextPreviousButtonSize</item>
         <item name="android:layout_height">@dimen/nextPreviousButtonSize</item>
     </style>
+    <style name="ShapeAppearanceOverlay.App.CornerSize30Percent" parent="">
+        <item name="cornerSize">30%</item>
+    </style>
 </resources>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="playButtonSize">90dp</dimen>
-    <dimen name="nextPreviousButtonSize">70dp</dimen>
+    <dimen name="playButtonSize">60dp</dimen>
+    <dimen name="nextPreviousButtonSize">40dp</dimen>
+    <dimen name="albumCoverRadius">40dp</dimen>
+    <dimen name="seekBarMargin">3dp</dimen>
+    <dimen name="bottomPlayerAlbumCoverPadding">5dp</dimen>
+    <dimen name="bottomPlayerSongMargin">5dp</dimen>
 </resources>

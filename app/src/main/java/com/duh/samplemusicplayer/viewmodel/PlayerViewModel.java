@@ -32,13 +32,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class PlayerViewModel extends ViewModel {
     private final IMusicPlayerServiceAIDL serviceAIDL;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private PlayerModel playerModel = new PlayerModel();
     private final MutableLiveData<PlayerModel> playerLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Song>> songListLiveData = new MutableLiveData<>();
     private final MutableLiveData<Long> durationLiveData = new MutableLiveData<>();
+    private final PlayerModel playerModel = new PlayerModel();
     private List<Song> songList = new ArrayList<>();
-    private long currentCuration;
-
     private final IMusicPlayerListener playerListener = new IMusicPlayerListener() {
 
         @Override
@@ -75,6 +73,7 @@ public class PlayerViewModel extends ViewModel {
             return null;
         }
     };
+    private long currentCuration;
 
     public PlayerViewModel(IMusicPlayerServiceAIDL serviceAIDL) {
         this.serviceAIDL = serviceAIDL;
@@ -86,33 +85,44 @@ public class PlayerViewModel extends ViewModel {
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .subscribeWith(new DisposableObserver<Long>() {
-            @Override
-            public void onNext(@NonNull Long aLong) {
-                try {
-                    currentCuration = serviceAIDL.getCurrentDuration();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                durationLiveData.postValue(currentCuration);
-            }
+                    @Override
+                    public void onNext(@NonNull Long aLong) {
+                        try {
+                            currentCuration = serviceAIDL.getCurrentDuration();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                        durationLiveData.postValue(currentCuration);
+                    }
 
-            @Override
-            public void onError(@NonNull Throwable e) {
-                e.printStackTrace();
-            }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        e.printStackTrace();
+                    }
 
-            @Override
-            public void onComplete() {
+                    @Override
+                    public void onComplete() {
 
-            }
-        }));
+                    }
+                }));
     }
 
     public Bitmap getAlbumCover(String path) {
         try (MediaMetadataRetriever mmr = new MediaMetadataRetriever()) {
             mmr.setDataSource(path);
             if (mmr.getEmbeddedPicture() != null) {
-                return BitmapFactory.decodeByteArray(mmr.getEmbeddedPicture(), 0, mmr.getEmbeddedPicture().length);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeByteArray(mmr.getEmbeddedPicture(), 0, mmr.getEmbeddedPicture().length, options);
+                int lowest = Math.min(options.outHeight, options.outWidth);
+                Bitmap bitmap;
+                options.inJustDecodeBounds = false;
+                if (lowest > 1) {
+                    bitmap = BitmapFactory.decodeByteArray(mmr.getEmbeddedPicture(), 0, mmr.getEmbeddedPicture().length, options);
+                    return Bitmap.createScaledBitmap(bitmap, lowest, lowest, false);
+                } else {
+                    return null;
+                }
             } else {
                 return null;
             }

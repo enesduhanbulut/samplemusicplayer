@@ -58,7 +58,11 @@ public class SongRecyclerViewAdapter extends AbstractRecyclerViewAdapter<Song, S
 
         public void bind(Song song, OnItemClickListener listener) {
             songArtist.setText(song.getSongArtist());
-            songTitle.setText(new File(song.getPath()).getName());
+            if (song.getSongTitle() != null && !song.getSongTitle().isEmpty()) {
+                songTitle.setText(song.getSongTitle());
+            } else {
+                songTitle.setText(new File(song.getPath()).getName());
+            }
             itemView.setOnClickListener(view -> listener.onItemClick(song));
         }
     }

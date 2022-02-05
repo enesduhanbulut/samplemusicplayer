@@ -36,7 +36,8 @@ public class AudioProvider {
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.DISPLAY_NAME,
                 MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.SIZE
+                MediaStore.Audio.Media.SIZE,
+                MediaStore.Audio.Media.TITLE
         };
         @SuppressLint("Recycle")
         Cursor cursor = context.getContentResolver().query(
@@ -51,6 +52,7 @@ public class AudioProvider {
                     .setAlbum(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)))
                     .setSongArtist(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)))
                     .setDuration(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)))
+                    .setSongTitle(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)))
                     .createSong();
             if(new File(music.getPath()).exists()){
                 songPublisher.onNext(music);
