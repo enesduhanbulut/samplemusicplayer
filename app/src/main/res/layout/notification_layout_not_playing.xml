@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notification_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/notificationSongInfoLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/notificationButtonsLayout"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/notificationSongTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/bottomPlayerSongMargin"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                style="@style/TextAppearance.Compat.Notification.Title"
+                app:layout_constraintStart_toEndOf="@id/bottomPlayerAlbumCoverImageView"
+                app:layout_constraintTop_toTopOf="@id/bottomPlayerAlbumCoverImageView"
+                android:text="Poşet" />
+
+            <TextView
+                android:id="@+id/notificationArtistTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/bottomPlayerSongMargin"
+                android:text="Serdar Ortaç" />
+
+            <TextView
+                android:id="@+id/notificationAlbumTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/bottomPlayerSongMargin"
+                android:text="Binlerce dansöz var" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notificationButtonsLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/notificationPreviousButton"
+            style="@style/BottomPlayerButtonStyle"
+            android:src="@drawable/ic_previous" />
+
+        <ImageButton
+            android:id="@+id/notificationPlayButton"
+            style="@style/BottomPlayerButtonStyle"
+            android:layout_width="@dimen/playButtonSize"
+            android:layout_height="@dimen/playButtonSize"
+            android:src="@drawable/ic_play" />
+
+        <ImageButton
+            android:id="@+id/notificationNextButton"
+            style="@style/BottomPlayerButtonStyle"
+            android:src="@drawable/ic_next"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,11 +1,12 @@
 package com.duh.samplemusicplayer;
 interface IMusicPlayerServiceAIDL {
-    void startMusic(in Bundle bundle, com.duh.samplemusicplayer.IMusicPlayerListener playerListener);
-    void pauseMusic(com.duh.samplemusicplayer.IMusicPlayerListener playerListener);
-    void stopMusic(com.duh.samplemusicplayer.IMusicPlayerListener playerListener);
-    void next(com.duh.samplemusicplayer.IMusicPlayerListener playerListener);
-    void previous(com.duh.samplemusicplayer.IMusicPlayerListener playerListener);
-    void getSongList(com.duh.samplemusicplayer.IMusicPlayerListener playerListener);
+    void setListener(com.duh.samplemusicplayer.IMusicPlayerListener playerListener);
+    void startMusic(in Bundle bundle);
+    void pauseMusic();
+    void stopMusic();
+    void next();
+    void previous();
+    void getSongList();
     boolean isPlaying();
     Bundle getCurrentSong();
     long getCurrentDuration();

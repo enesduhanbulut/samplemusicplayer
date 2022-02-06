@@ -77,6 +77,11 @@ public class PlayerViewModel extends ViewModel {
 
     public PlayerViewModel(IMusicPlayerServiceAIDL serviceAIDL) {
         this.serviceAIDL = serviceAIDL;
+        try {
+            serviceAIDL.setListener(playerListener);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         startDurationObservable();
     }
 
@@ -143,7 +148,7 @@ public class PlayerViewModel extends ViewModel {
 
     public void startMusic(Song song) {
         try {
-            serviceAIDL.startMusic(PlayerUtils.createSongBundle(song), playerListener);
+            serviceAIDL.startMusic(PlayerUtils.createSongBundle(song));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -151,7 +156,7 @@ public class PlayerViewModel extends ViewModel {
 
     public void startMusic(int seekTo) {
         try {
-            serviceAIDL.startMusic(PlayerUtils.createSeekBundle(seekTo), playerListener);
+            serviceAIDL.startMusic(PlayerUtils.createSeekBundle(seekTo));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -159,7 +164,7 @@ public class PlayerViewModel extends ViewModel {
 
     public void startMusic() {
         try {
-            serviceAIDL.startMusic(new Bundle(), playerListener);
+            serviceAIDL.startMusic(new Bundle());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -167,7 +172,7 @@ public class PlayerViewModel extends ViewModel {
 
     public void startNextMusic() {
         try {
-            serviceAIDL.next(playerListener);
+            serviceAIDL.next();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -175,7 +180,7 @@ public class PlayerViewModel extends ViewModel {
 
     public void startPreviousMusic() {
         try {
-            serviceAIDL.previous(playerListener);
+            serviceAIDL.previous();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -183,14 +188,14 @@ public class PlayerViewModel extends ViewModel {
 
     public void pauseMusic() {
         try {
-            serviceAIDL.pauseMusic(playerListener);
+            serviceAIDL.pauseMusic();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
     public void getSongList() throws RemoteException {
-        serviceAIDL.getSongList(playerListener);
+        serviceAIDL.getSongList();
     }
 
     @Override
