@@ -3,16 +3,21 @@ package com.duh.samplemusicplayer.media.player.state;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.RemoteException;
 
 import com.duh.samplemusicplayer.IMusicPlayerListener;
 import com.duh.samplemusicplayer.media.AudioProvider;
 import com.duh.samplemusicplayer.media.player.PlayerUtils;
+import com.duh.samplemusicplayer.model.MediaPlayerQueueModel;
 import com.duh.samplemusicplayer.model.Song;
 import com.duh.samplemusicplayer.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -34,14 +39,15 @@ public class MediaPlayerManager {
     private ErrorState errorState;
     private MediaPlayer mediaPlayer;
     private IMediaPlayerState currentState;
-
+    private Queue<MediaPlayerQueueModel> queue;
+    private AtomicBoolean isInProgress = new AtomicBoolean(false);
     public MediaPlayerManager(Context context, AudioProvider audioProvider) {
         this.audioProvider = audioProvider;
         this.stateChanger = this::onStateChange;
         initStates(context);
         observeSongList();
-
         currentState = idleState;
+        queue = new ConcurrentLinkedQueue<>();
     }
 
     private void initStates(Context context) {
@@ -61,23 +67,80 @@ public class MediaPlayerManager {
         this.errorState = new ErrorState();
     }
 
-    public void handleEvent(MediaPlayerEvents event, Bundle bundle, IMusicPlayerListener playerListener) throws RemoteException {
-        switch (event) {
-            case START:
-                if (currentSong == null && PlayerUtils.getSongFromBundle(bundle) == null) {
-                    bundle = getPreviousSongBundle();
+    public void handleEvent(boolean isFromService, MediaPlayerEvents event, Bundle bundle, IMusicPlayerListener playerListener) throws RemoteException {
+        queue.add(new MediaPlayerQueueModel(event, bundle, playerListener));
+        if (!isInProgress.get() || isFromService) {
+            isInProgress.set(true);
+            MediaPlayerQueueModel queueModel = queue.poll();
+            switch (queueModel.getEvent()) {
+                case START:
+                    if (currentSong == null && PlayerUtils.getSongFromBundle(queueModel.getBundle()) == null) {
+                        queueModel.setBundle(getPreviousSongBundle());
+                    }
+                    break;
+                case NEXT:
+                    queueModel.setBundle(getNextSongBundle());
+                    break;
+                case PREVIOUS:
+                    queueModel.setBundle(getPreviousSongBundle());
+                    break;
+                default:
+                    break;
+            }
+            currentState.handle(queueModel.getEvent(), queueModel.getBundle(), mediaPlayer, stateChanger, new IMusicPlayerListener() {
+                @Override
+                public void onStarted(Bundle songBundle) throws RemoteException {
+                    queueModel.getPlayerListener().onStarted(songBundle);
+                    isInProgress.set(false);
+                    handleNextEvent();
                 }
-                break;
-            case NEXT:
-                bundle = getNextSongBundle();
-                break;
-            case PREVIOUS:
-                bundle = getPreviousSongBundle();
-                break;
-            default:
-                break;
+
+                @Override
+                public void onPaused() throws RemoteException {
+                    queueModel.getPlayerListener().onPaused();
+                    isInProgress.set(false);
+                    handleNextEvent();
+                }
+
+                @Override
+                public void onStopped() throws RemoteException {
+                    queueModel.getPlayerListener().onStopped();
+                    isInProgress.set(false);
+                    handleNextEvent();
+                }
+
+                @Override
+                public void onListChanged(Bundle listBundle) throws RemoteException {
+                    queueModel.getPlayerListener().onListChanged(listBundle);
+                    isInProgress.set(false);
+                    handleNextEvent();
+                }
+
+                @Override
+                public void onError(int errorCode, String errorMessage) throws RemoteException {
+                    queueModel.getPlayerListener().onError(errorCode, errorMessage);
+                    isInProgress.set(false);
+                    handleNextEvent();
+                }
+
+                @Override
+                public IBinder asBinder() {
+                    return null;
+                }
+            });
+
         }
-        currentState.handle(event, bundle, mediaPlayer, stateChanger, playerListener);
+    }
+
+    public void handleEvent(MediaPlayerEvents event, Bundle bundle, IMusicPlayerListener playerListener) throws RemoteException {
+        handleEvent(false, event, bundle, playerListener);
+    }
+
+    private void handleNextEvent() throws RemoteException {
+        MediaPlayerQueueModel queueModel = queue.poll();
+        if (queueModel != null) {
+            handleEvent(queueModel.getEvent(), queueModel.getBundle(), queueModel.getPlayerListener());
+        }
     }
 
     private void onStateChange(MediaPlayerEvents event, Bundle bundle, MediaPlayerStates mediaPlayerState, IMusicPlayerListener playerListener) throws RemoteException {
@@ -106,7 +169,7 @@ public class MediaPlayerManager {
             default:
                 return;
         }
-        handleEvent(event, bundle, playerListener);
+        handleEvent(true, event, bundle, playerListener);
         currentSong = startedState.getCurrentSong();
     }
 
