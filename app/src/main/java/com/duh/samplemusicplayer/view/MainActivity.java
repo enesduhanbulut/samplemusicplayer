@@ -1,4 +1,4 @@
-package com.duh.samplemusicplayer;
+package com.duh.samplemusicplayer.view;
 
 import android.Manifest;
 import android.content.pm.PackageManager;

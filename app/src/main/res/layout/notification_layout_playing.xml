@@ -30,8 +30,8 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 style="@style/TextAppearance.Compat.Notification.Title"
-                app:layout_constraintStart_toEndOf="@id/bottomPlayerAlbumCoverImageView"
-                app:layout_constraintTop_toTopOf="@id/bottomPlayerAlbumCoverImageView"
+                app:layout_constraintStart_toEndOf="@id/bottomFragmentAlbumCoverImageView"
+                app:layout_constraintTop_toTopOf="@id/bottomFragmentAlbumCoverImageView"
                 android:text="Poşet" />
 
             <TextView

@@ -16,19 +16,19 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <SeekBar
-            android:id="@+id/buttomFragmentSeekBar"
+            android:id="@+id/bottomFragmentSeekBar"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:max="100"
             android:progressTint="?attr/colorPrimary"
-            app:layout_constraintEnd_toStartOf="@id/buttomFragmentEndDurationTextView"
-            app:layout_constraintStart_toEndOf="@id/buttonFragmentCurrDurationTextView"
+            app:layout_constraintEnd_toStartOf="@id/bottomFragmentEndDurationTextView"
+            app:layout_constraintStart_toEndOf="@id/bottomFragmentCurrDurationTextView"
             app:layout_constraintTop_toTopOf="parent"
             tools:progress="50" />
 
         <TextView
-            android:id="@+id/buttonFragmentCurrDurationTextView"
+            android:id="@+id/bottomFragmentCurrDurationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
             tools:text="00:50" />
 
         <TextView
-            android:id="@+id/buttomFragmentEndDurationTextView"
+            android:id="@+id/bottomFragmentEndDurationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -53,16 +53,16 @@
         app:layout_constraintTop_toBottomOf="@id/seekBarLayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottomPlayerSongInfoLayout"
+            android:id="@+id/bottomFragmentSongInfoLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/bottomPlayerButtonsLayout"
+            android:layout_toStartOf="@id/bottomFragmentButtonsLayout"
             android:background="?attr/colorSecondary">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/bottomPlayerAlbumCoverImageView"
+                android:id="@+id/bottomFragmentAlbumCoverImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:adjustViewBounds="true"
@@ -75,7 +75,7 @@
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize30Percent" />
 
             <TextView
-                android:id="@+id/bottomPlayerSongTextView"
+                android:id="@+id/bottomFragmentSongTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/bottomPlayerSongMargin"
@@ -84,40 +84,40 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:textAppearance="?attr/textAppearanceHeadline6"
-                app:layout_constraintStart_toEndOf="@id/bottomPlayerAlbumCoverImageView"
-                app:layout_constraintTop_toTopOf="@id/bottomPlayerAlbumCoverImageView"
+                app:layout_constraintStart_toEndOf="@id/bottomFragmentAlbumCoverImageView"
+                app:layout_constraintTop_toTopOf="@id/bottomFragmentAlbumCoverImageView"
                 tools:text="Poşet" />
 
             <TextView
-                android:id="@+id/bottomPlayerArtistTextView"
+                android:id="@+id/bottomFragmentArtistTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/bottomPlayerSongMargin"
-                app:layout_constraintStart_toEndOf="@id/bottomPlayerAlbumCoverImageView"
-                app:layout_constraintTop_toBottomOf="@id/bottomPlayerSongTextView"
+                app:layout_constraintStart_toEndOf="@id/bottomFragmentAlbumCoverImageView"
+                app:layout_constraintTop_toBottomOf="@id/bottomFragmentSongTextView"
                 tools:text="Serdar Ortaç" />
 
             <TextView
-                android:id="@+id/bottomPlayerAlbumTextView"
+                android:id="@+id/bottomFragmentAlbumTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/bottomPlayerSongMargin"
-                app:layout_constraintStart_toEndOf="@id/bottomPlayerAlbumCoverImageView"
-                app:layout_constraintTop_toBottomOf="@id/bottomPlayerArtistTextView"
+                app:layout_constraintStart_toEndOf="@id/bottomFragmentAlbumCoverImageView"
+                app:layout_constraintTop_toBottomOf="@id/bottomFragmentArtistTextView"
                 tools:text="Binlerce dansöz var" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottomPlayerButtonsLayout"
+            android:id="@+id/bottomFragmentButtonsLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true">
 
             <ImageButton
-                android:id="@+id/buttomFragmentPreviousButton"
+                android:id="@+id/bottomFragmentPreviousButton"
                 style="@style/BottomPlayerButtonStyle"
                 android:src="@drawable/ic_previous"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -49,14 +49,14 @@ public class BottomPlayerFragment extends Fragment implements SeekBar.OnSeekBarC
         playerViewModel = new ViewModelProvider(requireActivity(), factory).get(PlayerViewModel.class);
         playButton = view.findViewById(R.id.bottomFragmentPlayButton);
         nextButton = view.findViewById(R.id.bottomFragmentNextButton);
-        buttonPrevious = view.findViewById(R.id.buttomFragmentPreviousButton);
-        currentDurationTextView = view.findViewById(R.id.buttonFragmentCurrDurationTextView);
-        endDurationTextView = view.findViewById(R.id.buttomFragmentEndDurationTextView);
-        seekBarDuration = view.findViewById(R.id.buttomFragmentSeekBar);
-        imageViewAlbumCover = view.findViewById(R.id.bottomPlayerAlbumCoverImageView);
-        songTextView = view.findViewById(R.id.bottomPlayerSongTextView);
-        artistTextView = view.findViewById(R.id.bottomPlayerArtistTextView);
-        albumTextView = view.findViewById(R.id.bottomPlayerAlbumTextView);
+        buttonPrevious = view.findViewById(R.id.bottomFragmentPreviousButton);
+        currentDurationTextView = view.findViewById(R.id.bottomFragmentCurrDurationTextView);
+        endDurationTextView = view.findViewById(R.id.bottomFragmentEndDurationTextView);
+        seekBarDuration = view.findViewById(R.id.bottomFragmentSeekBar);
+        imageViewAlbumCover = view.findViewById(R.id.bottomFragmentAlbumCoverImageView);
+        songTextView = view.findViewById(R.id.bottomFragmentSongTextView);
+        artistTextView = view.findViewById(R.id.bottomFragmentArtistTextView);
+        albumTextView = view.findViewById(R.id.bottomFragmentAlbumTextView);
 
         playButton.setOnClickListener(this::onPlayClicked);
         nextButton.setOnClickListener(this::onNextClicked);
